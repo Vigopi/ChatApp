@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "770834576266",
+    "firebase_url": "https://chatapp-d0f32.firebaseio.com",
+    "project_id": "chatapp-d0f32",
+    "storage_bucket": "chatapp-d0f32.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:770834576266:android:3bf09f0ba8b1b34d",
+        "android_client_info": {
+          "package_name": "com.example.vinothgopigraj.chatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "770834576266-gjkkmf7l7cm6ppo8uel9ke33qcode5r3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.vinothgopigraj.chatapp",
+            "certificate_hash": "66011a6d355ed8585c0f6ec52b7d7a3e5a94d8d1"
+          }
+        },
+        {
+          "client_id": "770834576266-ema57or4s9hfhd9mjoh2jl2rbkt8gq4l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAU4rvTRtILSkjQocXoAtZ1sQCr3EOOD78"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "770834576266-ema57or4s9hfhd9mjoh2jl2rbkt8gq4l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
