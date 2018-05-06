@@ -43,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
         editMessage = (EditText) findViewById(R.id.editMsg);
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Messages");
         mMessageList = (RecyclerView) findViewById(R.id.messageRec);
-        mMessageList.setHasFixedSize(true);
+        mMessageList.setHasFixedSize(false);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
         mMessageList.setLayoutManager(linearLayoutManager);
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
                     Date date = new Date();
                     //System.out.println(date);
                     newPost.child("time").setValue(formatter.format(date).toString());
+                    mMessageList.smoothScrollToPosition(mMessageList.getAdapter().getItemCount());
                 }
 
                 @Override
@@ -87,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
-            mMessageList.scrollToPosition(mMessageList.getAdapter().getItemCount());
+            mMessageList.smoothScrollToPosition(mMessageList.getAdapter().getItemCount());
             editMessage.setText("");
         }
     }
