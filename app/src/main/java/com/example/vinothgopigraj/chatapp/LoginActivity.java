@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,7 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 public class LoginActivity extends AppCompatActivity {
 
     private EditText loginEmail,loginPassword;
-    private Button loginButton;
+    private Button loginButton,signupButton;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
 
@@ -33,9 +34,17 @@ public class LoginActivity extends AppCompatActivity {
         loginEmail = (EditText) findViewById(R.id.emailLoginText);
         loginPassword = (EditText) findViewById(R.id.passwordLoginText);
         loginButton = (Button) findViewById(R.id.loginLoginButton);
+        signupButton = (Button) findViewById(R.id.registerLoginButton);
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+
+        signupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
+            }
+        });
     }
 
     public void loginButtonClickedLogin(View view){
@@ -48,15 +57,16 @@ public class LoginActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful())
                     {
-                        System.out.println("Login success");
                         checkUserExists();
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(),"Wrong email or password",Toast.LENGTH_SHORT);
                     }
                 }
             });
         }
-
     }
-
     public void checkUserExists(){
         final String user_id = mAuth.getCurrentUser().getUid();
         mDatabase.addValueEventListener(new ValueEventListener() {
@@ -75,4 +85,5 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
 }

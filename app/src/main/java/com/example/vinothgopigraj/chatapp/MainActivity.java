@@ -1,5 +1,6 @@
 package com.example.vinothgopigraj.chatapp;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -7,9 +8,12 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -97,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        Toast.makeText(getApplicationContext(),"Login success",Toast.LENGTH_SHORT);
         FirebaseRecyclerAdapter <Message,MessageViewHolder> FBRA = new FirebaseRecyclerAdapter<Message, MessageViewHolder>(
                 Message.class,R.layout.singlemessagelayout,
                 MessageViewHolder.class,
@@ -107,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 viewHolder.setContent(model.getContent());
                 viewHolder.setUsername(model.getUsername());
                 viewHolder.setTime(model.getTime());
+                mMessageList.smoothScrollToPosition(position);
             }
         };
         mMessageList.setAdapter(FBRA);
@@ -130,5 +136,27 @@ public class MainActivity extends AppCompatActivity {
             TextView time_content = (TextView) mView.findViewById(R.id.timeText);
             time_content.setText(time);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.menu)
+        {
+            logout();
+        }
+        return true;
+    }
+
+    public void logout(){
+        mAuth.signOut();
+        Toast.makeText(getApplicationContext(),"Logout successfull",Toast.LENGTH_LONG);
+        startActivity(new Intent(MainActivity.this,LoginActivity.class));
+
     }
 }
