@@ -9,8 +9,8 @@
     <TextView
         android:layout_width="200dp"
         android:layout_height="50dp"
-        android:layout_marginTop="150dp"
-        android:layout_marginHorizontal="93dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="55dp"
         android:text="Login"
         android:textColor="@color/colorPrimary"
         android:textSize="30dp"
@@ -18,16 +18,18 @@
         android:textAlignment="center"
         />
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="600dp"
         android:orientation="vertical"
+        android:layout_marginLeft="10dp"
         >
         <EditText
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:id="@+id/emailLoginText"
             android:layout_marginTop="10dp"
-            android:layout_marginHorizontal="93dp"
+            android:layout_marginHorizontal="55dp"
+            android:inputType="textEmailAddress"
             android:hint="Email"
             />
         <EditText
@@ -35,14 +37,14 @@
             android:layout_height="50dp"
             android:id="@+id/passwordLoginText"
             android:layout_marginTop="10dp"
-            android:layout_marginHorizontal="93dp"
+            android:layout_marginHorizontal="55dp"
             android:hint="Password"
             android:inputType="textPassword"
             />
         <LinearLayout
             android:layout_width="200dp"
             android:layout_height="60dp"
-            android:layout_marginHorizontal="93dp"
+            android:layout_marginHorizontal="55dp"
             android:orientation="horizontal"
             >
             <Button

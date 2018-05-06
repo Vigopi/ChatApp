@@ -9,8 +9,8 @@
     <TextView
         android:layout_width="200dp"
         android:layout_height="50dp"
-        android:layout_marginHorizontal="93dp"
-        android:layout_marginTop="120dp"
+        android:layout_marginLeft="55dp"
+        android:layout_marginTop="100dp"
         android:id="@+id/register"
         android:text="Register here"
         android:textAlignment="center"
@@ -23,7 +23,7 @@
         android:layout_width="300dp"
         android:layout_height="600dp"
         android:orientation="vertical"
-        android:layout_marginLeft="43dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginBottom="50dp"
         >
         <EditText
@@ -31,6 +31,7 @@
             android:layout_height="50dp"
             android:layout_marginHorizontal="50dp"
             android:layout_marginTop="10dp"
+            android:inputType="text"
             android:hint="Name"
             android:id="@+id/nameText"
             />
@@ -67,7 +68,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="50dp"
                 android:id="@+id/registerButton"
-                android:onClick="registerButtonClicked"
+
                 />
             <Button
                 android:layout_width="90dp"
@@ -76,7 +77,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="20dp"
                 android:id="@+id/loginButton"
-                android:onClick="loginButtonClicked"
+
                 />
         </LinearLayout>
     </LinearLayout>

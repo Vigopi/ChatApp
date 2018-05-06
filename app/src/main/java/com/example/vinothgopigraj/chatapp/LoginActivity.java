@@ -48,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful())
                     {
+                        System.out.println("Login success");
                         checkUserExists();
                     }
                 }
