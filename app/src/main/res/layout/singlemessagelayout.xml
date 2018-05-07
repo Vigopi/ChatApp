@@ -14,9 +14,14 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:padding="5dp"
-        android:text="Vinothgopi"
         android:textColor="#536DFE"
         android:textStyle="bold" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageFile"
+        />
 
     <TextView
         android:id="@+id/messageText"
@@ -24,7 +29,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="15dp"
-        android:text="Hello Friends"
         android:textColor="#000000"
         android:textStyle="bold" />
 

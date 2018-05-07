@@ -1,8 +1,13 @@
 package com.example.vinothgopigraj.chatapp;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +36,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -49,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser mCurrentUser;
     private DatabaseReference mDatabaseUsers;
     private StorageReference mStorageRef;
+
+    private static final int PICK_IMAGE_REQUEST = 234;
+    private Uri filePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,20 +88,81 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void uploadFile(){
-        Uri file = Uri.fromFile(new File("path/to/images/rivers.jpg"));
-        StorageReference riversRef = mStorageRef.child("images/rivers.jpg");
+        if (filePath != null) {
 
-        riversRef.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
+            final String filename = "images/pic_"+getCurrentTime()+".jpg";
 
-            }
-        });
+            mCurrentUser = mAuth.getCurrentUser();
+            mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUser.getUid());
+
+            final DatabaseReference newPost = databaseReference.push();
+            mDatabaseUsers.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    newPost.child("content").setValue(filename);
+                    newPost.child("username").setValue(dataSnapshot.child("Name").getValue()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+
+                        }
+                    });
+                    newPost.child("time").setValue(getCurrentTime());
+                    mMessageList.smoothScrollToPosition(mMessageList.getAdapter().getItemCount());
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+            mMessageList.smoothScrollToPosition(mMessageList.getAdapter().getItemCount());
+
+
+
+            //displaying a progress dialog while upload is going on
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading");
+            progressDialog.show();
+
+            StorageReference riversRef = mStorageRef.child(filename);
+            riversRef.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            //if the upload is successfull
+                            //hiding the progress dialog
+                            progressDialog.dismiss();
+                                    filePath=null;
+                            //and displaying a success toast
+                            Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            //if the upload is not successfull
+                            //hiding the progress dialog
+                            progressDialog.dismiss();
+                            filePath=null;
+                            //and displaying error message
+                            Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            //calculating progress percentage
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+
+                            //displaying percentage in progress dialog
+                            progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
+                        }
+                    });
+        }
+        //if there is not any file
+        else {
+            //you can display an error toast
+        }
     }
 
     public void downloadFile(StorageReference riversRef){
@@ -108,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         // Successfully downloaded data to local file
                         // ...
+
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -118,6 +190,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private String getCurrentTime()
+    {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+        Date date = new Date();
+        return formatter.format(date).toString();
+    }
 
     public void sendButtonClicked(View view) {
         mCurrentUser = mAuth.getCurrentUser();
@@ -135,10 +213,7 @@ public class MainActivity extends AppCompatActivity {
 
                         }
                     });
-                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
-                    Date date = new Date();
-                    //System.out.println(date);
-                    newPost.child("time").setValue(formatter.format(date).toString());
+                    newPost.child("time").setValue(getCurrentTime());
                     mMessageList.smoothScrollToPosition(mMessageList.getAdapter().getItemCount());
                 }
 
@@ -150,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
             mMessageList.smoothScrollToPosition(mMessageList.getAdapter().getItemCount());
             editMessage.setText("");
         }
+        uploadFile();
     }
 
     @Override
@@ -164,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected void populateViewHolder(MessageViewHolder viewHolder, Message model, int position) {
                 viewHolder.setContent(model.getContent());
-                viewHolder.setUsername(model.getUsername());
+               // viewHolder.setUsername(model.getUsername());
                 viewHolder.setTime(model.getTime());
                 mMessageList.smoothScrollToPosition(position);
             }
@@ -178,6 +254,7 @@ public class MainActivity extends AppCompatActivity {
             super(itemView);
             mView=itemView;
         }
+
         public void setContent(String content){
             TextView messageContent = (TextView) mView.findViewById(R.id.messageText);
             messageContent.setText(content);
@@ -192,6 +269,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void showFileChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            filePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                //imageView.setImageBitmap(bitmap);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu,menu);
@@ -203,6 +302,15 @@ public class MainActivity extends AppCompatActivity {
         if(item.getItemId() == R.id.menu)
         {
             logout();
+        }
+        else if(item.getItemId() == R.id.filechoose)
+        {
+            // file choose
+            showFileChooser();
+        }
+        else if(item.getItemId() == R.id.imageFile)
+        {
+            startActivity(new Intent(MainActivity.this,ImageActivity.class));
         }
         return true;
     }
