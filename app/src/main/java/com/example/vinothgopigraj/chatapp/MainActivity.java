@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
         {
             logout();
         }
-        else if(item.getItemId() == R.id.filechoose)
+       /* else if(item.getItemId() == R.id.filechoose)
         {
             // file choose
             showFileChooser();
@@ -311,7 +311,7 @@ public class MainActivity extends AppCompatActivity {
         else if(item.getItemId() == R.id.imageFile)
         {
             startActivity(new Intent(MainActivity.this,ImageActivity.class));
-        }
+        }*/
         return true;
     }
 

@@ -43,7 +43,7 @@
             android:ems="10"
             android:layout_marginTop="10dp"
             android:layout_marginHorizontal="50dp"
-            android:hint="mail@mail.com"
+            android:hint="Email"
             android:inputType="textEmailAddress" />
 
         <EditText
